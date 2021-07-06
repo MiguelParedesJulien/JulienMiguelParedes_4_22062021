@@ -12,12 +12,23 @@ function editNav() {
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
-const form = document.getElementById("form");
-const firstname = document.getElementById("first");
-const lastname = document.getElementById("last");
-const birthdate = document.getElementById("birthdate");
-const tournament = document.getElementById("quantity");
+//const form = document.getElementById("form");
+const form = document.querySelector("form[name='reserve']");
+//const firstname = document.getElementById("first");
+//const lastname = document.getElementById("last");
+//const email = document.getElementById("email");
+//const birthdate = document.getElementById("birthdate");
+//const tournament = document.getElementById("quantity");
+const newYork = document.getElementById("location1");
+const sanFrancisco = document.getElementById("location2");
+const seattle = document.getElementById("location3");
+const chicago = document.getElementById("location4");
+const boston = document.getElementById("location5");
+const portland = document.getElementById("location6");
+const cities = [newYork, sanFrancisco, seattle, chicago, boston, portland];
+const condition = document.getElementById("checkbox1");
 const closeModalBtn = document.querySelector(".close");
+const validationModalBtn = document.querySelector('.btn-submit[type="submit"]');
 
 // Usefull variables
 
@@ -32,6 +43,8 @@ const errorLast = document.getElementById("error_last");
 const errorEmail = document.getElementById("error_email");
 const errorBirthdate = document.getElementById("error_birthdate");
 const errorTournament = document.getElementById("error_tournament");
+const errorCities = document.getElementById("error_cities");
+const errorCondition = document.getElementById("error_condition");
 
 // launch modal event
 
@@ -49,161 +62,198 @@ closeModalBtn.addEventListener("click", function () {
    modalbg.style.display = "none";
 });
 
-/*
-// Validation first name
+// Validation modal
 
-form.addEventListener("submit", function (e) {
-   if (firstname.value.trim() == "" || firstname.value.length < 2) {
-      errorFirst.innerHTML = "Veuillez entrer 2 caractères ou plus";
-      errorFirst.style.color = "red";
-      errorFirst.style.fontSize = "15px";
-      e.preventDefault();
-   } else if (myRegex.test(firstname.value) == false) {
-      errorFirst.innerHTML = "Le champ n'est pas valide";
-      errorFirst.style.color = "red";
-      errorFirst.style.fontSize = "15px";
-      e.preventDefault();
+function validationModal(e) {
+   var valueValidate = validate();
+   e.preventDefault();
+   if (valueValidate) {
+      confirmationMessage();
    }
-});
+   document.querySelector(".close-button").addEventListener("click", closeModal);
+   closeModalBtn.addEventListener("click", closeModal);
+}
 
-// Validation last name
-
-form.addEventListener("submit", function (e) {
-   if (lastname.value.trim() == "" || lastname.value.length < 2) {
-      errorLast.innerHTML = "Veuillez entrer 2 caractères ou plus";
-      errorLast.style.color = "red";
-      errorLast.style.fontSize = "15px";
-      e.preventDefault();
-   } else if (myRegex.test(lastname.value) == false) {
-      errorLast.innerHTML = "Le champ n'est pas valide";
-      errorLast.style.color = "red";
-      errorLast.style.fontSize = "15px";
-      e.preventDefault();
-   }
-});*/
-
-// Validation formulaire
-
-// var number = document.forms["quantity"];
-// var city = document.forms["location"];
+// Validation form
 
 function validate() {
-   var valF = validateFirstname();
-   var valL = validateLastname();
-   var valE = validateEmail();
-   var valB = validateBirthdate();
-   var valT = validateTournament();
-
-   if (valF == false || valL == false || valE == false || valB == false || valT == false) {
-      console.log("non");
+   var current = { isFocused: false };
+   var valueFirstname = validateFirstname(current);
+   var valueLastname = validateLastname(current);
+   var valueEmail = validateEmail(current);
+   var valueBirthdate = validateBirthdate(current);
+   var valueTournament = validateTournament(current);
+   var valueCities = validateCities();
+   var valueCondition = validateCondition();
+   if (valueFirstname == false || valueLastname == false || valueEmail == false || valueBirthdate == false || valueTournament == false || valueCities == false || valueCondition == false) {
       return false;
    } else {
-      console.log("oui");
       return true;
    }
 }
 
+// Show error messages and focus
+
+function showError(current, error, obj, message) {
+   if (current.isFocused == false) {
+      current.isFocused = true;
+      obj.focus();
+   }
+   message.innerHTML = error;
+   message.style.color = "red";
+   message.style.fontSize = "10px";
+   return false;
+}
+
 // Validation firstname
 
-function validateFirstname() {
+function validateFirstname(current) {
    var firstname = document.forms["reserve"]["first"];
+   let error = false;
 
    if (firstname.value == "" || firstname.value.length < 2) {
-      errorFirst.innerHTML = "Veuillez entrer 2 caractères ou plus pour le champ du prénom";
-      errorFirst.style.color = "red";
-      errorFirst.style.fontSize = "10px";
-      //firstname.focus();
-      console.log("pas de prénom");
-      return false;
-   } else {
-      errorFirst.innerHTML = "";
+      error = "Veuillez entrer 2 caractères ou plus pour le champ du prénom";
+   } else if (myRegex.test(firstname.value) == false) {
+      error = "Le champ n'est pas valide";
    }
-   if (myRegex.test(firstname.value) == false) {
-      errorFirst.innerHTML = "Le champ n'est pas valide";
-      errorFirst.style.color = "red";
-      errorFirst.style.fontSize = "10px";
-      //firstname.focus();
-      console.log("le prénom n'est pas valide");
-      return false;
-   } else {
-      errorFirst.innerHTML = "";
+   if (error) {
+      return showError(current, error, firstname, errorFirst);
    }
+   errorFirst.innerHTML = "";
+   return true;
 }
 
 // Validation lastname
 
-function validateLastname() {
+function validateLastname(current) {
    var lastname = document.forms["reserve"]["last"];
+   let error = false;
 
    if (lastname.value == "" || lastname.value.length < 2) {
-      errorLast.innerHTML = "Veuillez entrer 2 caractères ou plus pour le champ du nom";
-      errorLast.style.color = "red";
-      errorLast.style.fontSize = "10px";
-      //lastname.focus();
-      console.log("le nom n'est pas valide");
-      return false;
-   } else {
-      errorLast.innerHTML = "";
+      error = "Veuillez entrer 2 caractères ou plus pour le champ du nom";
+   } else if (myRegex.test(lastname.value) == false) {
+      error = "Le champ n'est pas valide";
    }
-   if (myRegex.test(lastname.value) == false) {
-      errorLast.innerHTML = "Le champ n'est pas valide";
-      errorLast.style.color = "red";
-      errorLast.style.fontSize = "10px";
-      //lastname.focus();
-      return false;
-   } else {
-      errorLast.innerHTML = "";
+   if (error) {
+      return showError(current, error, lastname, errorLast);
    }
+   errorLast.innerHTML = "";
+   console.log("vl_true");
+   return true;
 }
 
 // Validation email
 
-function validateEmail() {
+function validateEmail(current) {
    var email = document.forms["reserve"]["email"];
+   let error = false;
 
    if (email.value == "" || email.value.length < 2) {
-      errorEmail.innerHTML = "Veuillez entrer 2 caractères ou plus pour le champ de l'email";
-      errorEmail.style.color = "red";
-      errorEmail.style.fontSize = "10px";
-      console.log("le mail n'est pas valide");
-      return false;
-   } else {
-      errorEmail.innerHTML = "";
+      error = "Veuillez entrer 2 caractères ou plus pour le champ du nom";
+   } else if (myRegexEmail.test(email.value) == false) {
+      error = "Le champ n'est pas valide";
    }
-   if (myRegexEmail.test(email.value) == false) {
-      errorEmail.innerHTML = "Le champ n'est pas valide";
-      errorEmail.style.color = "red";
-      errorEmail.style.fontSize = "10px";
-      return false;
-   } else {
-      errorEmail.innerHTML = "";
+   if (error) {
+      return showError(current, error, email, errorEmail);
    }
+   errorEmail.innerHTML = "";
+   return true;
 }
 
 // Validation birthdate
 
-function validateBirthdate() {
+function validateBirthdate(current) {
    var birthdate = document.forms["reserve"]["birthdate"];
+   let error = false;
 
    if (birthdate.value == "") {
-      errorBirthdate.innerHTML = "Veuillez entrer votre date de naissance";
-      errorBirthdate.style.color = "red";
-      errorBirthdate.style.fontSize = "10px";
-   } else {
-      errorBirthdate.innerHTML = "";
+      error = "Veuillez entrer votre date de naissance";
    }
+   if (error) {
+      return showError(current, error, birthdate, errorBirthdate);
+   }
+   errorBirthdate.innerHTML = "";
+   return true;
 }
 
 // Validation number of tournament
 
-function validateTournament() {
+function validateTournament(current) {
+   var tournament = document.forms["reserve"]["quantity"];
+   let error = false;
    if (!myRegexTournament.test(tournament.value) && !tournament.value >= 0 && !tournament.value < 100) {
-      errorTournament.innerHTML = "Veuillez indiquer un nombre de tournois compris entre 0 et 99";
-      errorTournament.style.color = "red";
-      errorTournament.style.fontSize = "10px";
-      console.log("mauvais nombre de tournois");
+      error = "Veuillez indiquer un nombre de tournois compris entre 0 et 99";
+   }
+   if (error) {
+      return showError(current, error, tournament, errorTournament);
+   }
+   errorTournament.innerHTML = "";
+   return true;
+}
+
+// Validation Cities
+
+function validateCities() {
+   for (let i = 0; i < cities.length; i++) {
+      if (cities[i].checked) {
+         console.log(cities[i]);
+         errorCities.innerHTML = "";
+         return true;
+      }
+      errorCities.innerHTML = "Veuillez choisir une ville";
+      errorCities.style.color = "red";
+      errorCities.style.fontSize = "10px";
       return false;
-   } else {
-      errorTournament.innerHTML = "";
    }
 }
+
+// Validation conditions of use
+
+function validateCondition() {
+   if (condition.checked) {
+      errorCondition.innerHTML = "";
+      return true;
+   }
+   errorCondition.innerHTML = "Veuillez accepter les conditions d'utilisation";
+   errorCondition.style.color = "red";
+   errorCondition.style.fontSize = "10px";
+   return false;
+}
+
+// Reset form
+
+function resetForm() {
+   formData.forEach((items) => {
+      items.style["visibility"] = "visible";
+   });
+   document.querySelectorAll(".confirmation").forEach((element) => element.remove());
+   form.reset();
+}
+
+// Close confirmation message
+
+function closeModal() {
+   document.querySelector(".close-button").remove();
+   validationModalBtn.style["visibility"] = "visible";
+   modalbg.style.display = "none";
+   resetForm();
+}
+
+// Confirmation message
+
+function confirmationMessage() {
+   formData.forEach((items) => {
+      items.style["visibility"] = "hidden";
+   });
+   validationModalBtn.style["visibility"] = "hidden";
+   let messsageConfirmation = document.createElement("p");
+   messsageConfirmation.className = "confirmation";
+   messsageConfirmation.innerText = "Merci, votre réservation a bien été reçue !";
+   form.appendChild(messsageConfirmation);
+   let closeBtn = document.createElement("div");
+   closeBtn.className = "close-button";
+   closeBtn.innerText = "Fermer";
+   form.appendChild(closeBtn);
+}
+
+validationModalBtn.addEventListener("click", validationModal);
