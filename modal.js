@@ -17,7 +17,7 @@ const form = document.querySelector("form[name='reserve']");
 //const firstname = document.getElementById("first");
 //const lastname = document.getElementById("last");
 //const email = document.getElementById("email");
-//const birthdate = document.getElementById("birthdate");
+const birthdate = document.getElementById("birthdate");
 //const tournament = document.getElementById("quantity");
 const newYork = document.getElementById("location1");
 const sanFrancisco = document.getElementById("location2");
@@ -33,7 +33,7 @@ const validationModalBtn = document.querySelector('.btn-submit[type="submit"]');
 // Usefull variables
 
 let myRegex = /^[a-zA-Z-\s]+$/;
-let myRegexEmail = /^[a-zA-Z-]+@[a-zA-Z-]+\.[a-zA-Z]{2,6}$/;
+let myRegexEmail = /^[a-zA-Z-0-9]+@[a-zA-Z-]+\.[a-zA-Z]{2,6}$/;
 let myRegexTournament = /[0-9]/;
 
 // Error Messages
@@ -70,8 +70,10 @@ function validationModal(e) {
    if (valueValidate) {
       confirmationMessage();
    }
+   //window.onload = function () {
    document.querySelector(".close-button").addEventListener("click", closeModal);
    closeModalBtn.addEventListener("click", closeModal);
+   //};
 }
 
 // Validation form
@@ -160,7 +162,27 @@ function validateEmail(current) {
    return true;
 }
 
-// Validation birthdate
+// Validation and check birthdate
+
+function checkDate() {
+   var dateOfToday = new Date();
+   var dateBirthday = new Date(birthdate.value);
+   var dateOfMajority = new Date(1988, 1, 1);
+   var dateLimit = new Date(1921, 1, 1);
+   var valueDateOfToday = parseInt(dateOfToday.valueOf(), 10);
+   console.log(valueDateOfToday);
+   var valueDateLimit = parseInt(dateLimit.valueOf(), 10);
+   var valueDateOfMajority = parseInt(dateOfMajority.valueOf(), 10);
+   console.log(valueDateOfMajority);
+   var valueLimitOfMajority = valueDateOfToday - valueDateOfMajority;
+   console.log(valueLimitOfMajority);
+   var valueDateBirthday = parseInt(dateBirthday.valueOf(), 10);
+
+   if (valueDateBirthday > valueLimitOfMajority || valueDateBirthday < valueDateLimit) {
+      return false;
+   }
+   return true;
+}
 
 function validateBirthdate(current) {
    var birthdate = document.forms["reserve"]["birthdate"];
@@ -168,6 +190,9 @@ function validateBirthdate(current) {
 
    if (birthdate.value == "") {
       error = "Veuillez entrer votre date de naissance";
+   }
+   if (!checkDate()) {
+      error = "Veuillez entrer une date valide";
    }
    if (error) {
       return showError(current, error, birthdate, errorBirthdate);
@@ -181,30 +206,32 @@ function validateBirthdate(current) {
 function validateTournament(current) {
    var tournament = document.forms["reserve"]["quantity"];
    let error = false;
-   if (!myRegexTournament.test(tournament.value) && !tournament.value >= 0 && !tournament.value < 100) {
-      error = "Veuillez indiquer un nombre de tournois compris entre 0 et 99";
+   console.log(tournament.value);
+   if (myRegexTournament.test(tournament.value) && tournament.value >= 0 && tournament.value < 100) {
+      errorTournament.innerHTML = "";
+      return true;
    }
+   error = "Veuillez indiquer un nombre de tournois compris entre 0 et 99";
    if (error) {
       return showError(current, error, tournament, errorTournament);
    }
-   errorTournament.innerHTML = "";
-   return true;
 }
 
 // Validation Cities
 
 function validateCities() {
    for (let i = 0; i < cities.length; i++) {
+      console.log(cities.length);
       if (cities[i].checked) {
-         console.log(cities[i]);
+         console.log(i);
          errorCities.innerHTML = "";
          return true;
       }
-      errorCities.innerHTML = "Veuillez choisir une ville";
-      errorCities.style.color = "red";
-      errorCities.style.fontSize = "10px";
-      return false;
    }
+   errorCities.innerHTML = "Veuillez choisir une ville";
+   errorCities.style.color = "red";
+   errorCities.style.fontSize = "10px";
+   return false;
 }
 
 // Validation conditions of use
@@ -233,10 +260,12 @@ function resetForm() {
 // Close confirmation message
 
 function closeModal() {
+   //window.onload = function () {
    document.querySelector(".close-button").remove();
    validationModalBtn.style["visibility"] = "visible";
    modalbg.style.display = "none";
    resetForm();
+   //};
 }
 
 // Confirmation message
