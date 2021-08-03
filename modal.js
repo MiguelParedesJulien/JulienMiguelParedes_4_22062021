@@ -12,13 +12,8 @@ function editNav() {
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
-//const form = document.getElementById("form");
 const form = document.querySelector("form[name='reserve']");
-//const firstname = document.getElementById("first");
-//const lastname = document.getElementById("last");
-//const email = document.getElementById("email");
 const birthdate = document.getElementById("birthdate");
-//const tournament = document.getElementById("quantity");
 const newYork = document.getElementById("location1");
 const sanFrancisco = document.getElementById("location2");
 const seattle = document.getElementById("location3");
@@ -70,13 +65,10 @@ function validationModal(e) {
    if (valueValidate) {
       confirmationMessage();
    }
-   //window.onload = function () {
-   document.querySelector(".close-button").addEventListener("click", closeModal);
    closeModalBtn.addEventListener("click", closeModal);
-   //};
 }
 
-// Validation form
+// Validation form : Fonction qui exécute toutes les fonctions de validation de champs, retourne false en cas d'erreur et true si tout est OK
 
 function validate() {
    var current = { isFocused: false };
@@ -94,7 +86,7 @@ function validate() {
    }
 }
 
-// Show error messages and focus
+// Show error messages and focus : Fonction qui permet de focus chaque champ et qui injecte un message d'erreur en cas de champ invalide
 
 function showError(current, error, obj, message) {
    if (current.isFocused == false) {
@@ -107,7 +99,7 @@ function showError(current, error, obj, message) {
    return false;
 }
 
-// Validation firstname
+// Validation firstname : Fonction qui vérifie si le champ prénom est valide
 
 function validateFirstname(current) {
    var firstname = document.forms["reserve"]["first"];
@@ -125,7 +117,7 @@ function validateFirstname(current) {
    return true;
 }
 
-// Validation lastname
+// Validation lastname : Fonction qui vérifie si le champ nom est valide
 
 function validateLastname(current) {
    var lastname = document.forms["reserve"]["last"];
@@ -144,7 +136,7 @@ function validateLastname(current) {
    return true;
 }
 
-// Validation email
+// Validation email : Fonction qui vérifie si le champ email est valide
 
 function validateEmail(current) {
    var email = document.forms["reserve"]["email"];
@@ -162,7 +154,7 @@ function validateEmail(current) {
    return true;
 }
 
-// Validation and check birthdate
+// Validation and check birthdate : Fonction qui vérifie si la date entrée par l'utilisateur est valide
 
 function checkDate() {
    var dateOfToday = new Date();
@@ -170,12 +162,9 @@ function checkDate() {
    var dateOfMajority = new Date(1988, 1, 1);
    var dateLimit = new Date(1921, 1, 1);
    var valueDateOfToday = parseInt(dateOfToday.valueOf(), 10);
-   console.log(valueDateOfToday);
    var valueDateLimit = parseInt(dateLimit.valueOf(), 10);
    var valueDateOfMajority = parseInt(dateOfMajority.valueOf(), 10);
-   console.log(valueDateOfMajority);
    var valueLimitOfMajority = valueDateOfToday - valueDateOfMajority;
-   console.log(valueLimitOfMajority);
    var valueDateBirthday = parseInt(dateBirthday.valueOf(), 10);
 
    if (valueDateBirthday > valueLimitOfMajority || valueDateBirthday < valueDateLimit) {
@@ -201,7 +190,7 @@ function validateBirthdate(current) {
    return true;
 }
 
-// Validation number of tournament
+// Validation number of tournament : Fonction qui vérifie que le nombre de tournois est bien valide
 
 function validateTournament(current) {
    var tournament = document.forms["reserve"]["quantity"];
@@ -217,7 +206,7 @@ function validateTournament(current) {
    }
 }
 
-// Validation Cities
+// Validation Cities : Fonction qui vérifie sir une ville a bien été choisie
 
 function validateCities() {
    for (let i = 0; i < cities.length; i++) {
@@ -234,7 +223,7 @@ function validateCities() {
    return false;
 }
 
-// Validation conditions of use
+// Validation conditions of use : Fonction qui vérifie si la case conditions d'utilisation a bien été cochée
 
 function validateCondition() {
    if (condition.checked) {
@@ -247,7 +236,7 @@ function validateCondition() {
    return false;
 }
 
-// Reset form
+// Reset form : Fonction qui réinitialise le formulaire une fois celui ci validé
 
 function resetForm() {
    formData.forEach((items) => {
@@ -257,18 +246,16 @@ function resetForm() {
    form.reset();
 }
 
-// Close confirmation message
+// Close confirmation message : Fonction qui permet de fermer le modal
 
 function closeModal() {
-   //window.onload = function () {
    document.querySelector(".close-button").remove();
    validationModalBtn.style["visibility"] = "visible";
    modalbg.style.display = "none";
    resetForm();
-   //};
 }
 
-// Confirmation message
+// Confirmation message : Fonction qui injecte un message de confirmation une fois le formulaire validé
 
 function confirmationMessage() {
    formData.forEach((items) => {
@@ -283,6 +270,7 @@ function confirmationMessage() {
    closeBtn.className = "close-button";
    closeBtn.innerText = "Fermer";
    form.appendChild(closeBtn);
+   document.querySelector(".close-button").addEventListener("click", closeModal);
 }
 
 validationModalBtn.addEventListener("click", validationModal);
