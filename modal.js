@@ -107,7 +107,7 @@ function validateFirstname(current) {
 
    if (firstname.value == "" || firstname.value.length < 2) {
       error = "Veuillez entrer 2 caractères ou plus pour le champ du prénom";
-   } else if (myRegex.test(firstname.value) == false) {
+   } else if (myRegex.test(firstname.value.trim()) == false) {
       error = "Le champ n'est pas valide";
    }
    if (error) {
@@ -125,7 +125,7 @@ function validateLastname(current) {
 
    if (lastname.value == "" || lastname.value.length < 2) {
       error = "Veuillez entrer 2 caractères ou plus pour le champ du nom";
-   } else if (myRegex.test(lastname.value) == false) {
+   } else if (myRegex.test(lastname.value.trim()) == false) {
       error = "Le champ n'est pas valide";
    }
    if (error) {
